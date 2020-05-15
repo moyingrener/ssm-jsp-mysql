@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tool="http://www.springframework.org/schema/tool" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd ">
+	
+	<mvc:annotation-driven validator="userValidata" conversion-service="conversion">
+	<!-- 	<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+		</mvc:message-converters> -->
+	</mvc:annotation-driven>
+	
+	<!-- 图片上传解析器 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="52428800"></property>
+	</bean>
+	
+	<!-- 扫描controller包开启注解 -->
+	<context:component-scan base-package="com.myee.controller"></context:component-scan>
+	<!-- 	拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>		
+			<mvc:mapping path="/user/**"/>
+			<mvc:mapping path="/product/**"/>
+			<mvc:mapping path="/file/**"/>
+			<mvc:mapping path="/personal/**"/>
+			<mvc:mapping path="/pay/**"/>
+			<bean class="com.myee.intercepter.Intercepter1"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!-- 引入静态资源 -->
+	<mvc:resources location="/statics/" mapping="/statics/**"></mvc:resources>
+
+	<!-- 配置转换器,并注入自定义转换器 ,再把转换器注册到spring容器-->
+	<bean id="conversion" class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="com.myee.conversiom.DateConversion"></bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 配置校验器 -->
+	<bean id="userValidata" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+			<property name="providerClass" value="org.hibernate.validator.HibernateValidator"></property>
+			<property name="validationMessageSource" ref="userErrorMessage"></property>
+	</bean>
+	<!-- 配置错误信息文件 -->
+	<bean id="userErrorMessage" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:error</value>
+			</list>
+		</property>
+		<!-- defaultEncoding可以解决乱码 -->
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="fileEncodings" value="UTF-8"></property>
+		<property name="cacheSeconds" value="120"></property>
+	</bean>
+	
+	<!-- 配置视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 全局异常设置 -->
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.RuntionException">error</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

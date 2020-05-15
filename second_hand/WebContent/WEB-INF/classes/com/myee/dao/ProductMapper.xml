@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myee.dao.ProductMapper">
+	<!-- 插入新商品信息 -->
+	<insert id="insertNewProduct" parameterType="com.myee.pojo.Product">
+	insert into db_product(ID,userid,goods,goodsdescription,price,priceunit,acondition,location,shelftime,goodstype,goodspic,state) 
+	values(#{ID},#{userid},#{goods},#{goodsdescription},#{price},#{priceunit},#{acondition},#{location},#{shelftime},#{goodstype},#{goodspic},#{state})
+	</insert>
+	
+	<!-- 通过商品ID删除(下架)商品 -->
+	<delete id="deleteProductById" parameterType="java.lang.String">
+		delete from db_product where db_product.ID=#{ID}
+	</delete>
+	
+		<!-- 通过商品ID更新商品信息 -->
+	<update id="updateProductByProductId" parameterType="com.myee.pojo.Product">
+		update db_product
+	<set>
+			<if test="ID !=null">
+			db_product.ID=#{ID},
+			</if>
+			<if test="userid !=null">
+			db_product.userid=#{userid},
+			</if>
+			<if test="goods !=null">
+			db_product.goods like CONCAT('%',#{goods},'%'),
+			</if>
+			<if test="goodsdescription !=null">
+			db_product.goodsdescription like CONCAT('%',#{goodsdescription},'%'),
+			</if>
+			<if test="price !=0.0 and price !=null">
+			db_product.price=#{price},
+			</if>
+			<if test="priceunit !=null">
+			db_product.priceunit=#{priceunit},
+			</if>
+			<if test="acondition !=null">
+			db_product.acondition=#{acondition},
+			</if>
+			<if test="location !=null">
+			db_product.location=#{location},
+			</if>
+			<if test="shelftime !=null">
+			db_product.shelftime=#{shelftime},
+			</if>
+			<if test="goodstype !=null">
+			db_product.goodstype=#{goodstype},
+			</if>
+			<if test="goodspic !=null">
+			db_product.goodspic=#{goodspic},
+			</if>
+			<if test="state !=null">
+			db_product.state=#{state},
+			</if>
+	</set>
+	where db_product.ID=#{ID}
+	</update>
+	
+	<!-- 多条件查询商品信息,主要用于商品导航栏通过商品类型查询 -->
+	<select id="selectAllGoodsByAllMessage" resultType="com.myee.pojo.Product" parameterType="com.myee.pojo.Product">
+		select * from db_product 
+		<trim prefix="where" prefixOverrides="and">
+			<if test="ID !=null">
+			and db_product.ID=#{ID}
+			</if>
+			<if test="userid !=null">
+			and db_product.userid=#{userid}
+			</if>
+			<if test="goods !=null">
+			and db_product.goods like CONCAT('%',#{goods},'%')
+			</if>
+			<if test="goodsdescription !=null">
+			and db_product.goodsdescription like CONCAT('%',#{goodsdescription},'%')
+			</if>
+			<if test="price !=0.0 and price !=null">
+			and db_product.price=#{price}
+			</if>
+			<if test="priceunit !=null">
+			and db_product.priceunit=#{priceunit}
+			</if>
+			<if test="acondition !=null">
+			and db_product.acondition=#{acondition}
+			</if>
+			<if test="location !=null">
+			and db_product.location=#{location}
+			</if>
+			<if test="shelftime !=null">
+			and db_product.shelftime=#{shelftime}
+			</if>
+			<if test="goodstype !=null">
+			and db_product.goodstype=#{goodstype}
+			</if>
+			<if test="goodspic !=null">
+			and db_product.goodspic=#{goodspic}
+			</if>
+			<if test="state !=null">
+			and db_product.state=#{state}
+			</if>
+			<if test="state !=null">
+			and db_product.state=#{state}
+			</if>
+			<if test="userid !=null">
+			order by shelftime DESC
+			</if>
+			<if test="goodstype !=null">
+			order by price DESC
+			</if>
+			<if test="goodsdescription !=null">
+			order by price DESC
+			</if>
+			<if test="from !=null and pagesize !=null">
+			limit #{from},#{pagesize}
+			</if>
+
+		</trim>
+	</select>
+	
+	<!-- 多条件查询商品信息记录数,主要用于商品导航栏通过商品类型查询 -->
+	<select id="selectAllGoodsCountsByAllMessage" resultType="java.lang.Integer" parameterType="com.myee.pojo.Product">
+		select count(*) from db_product 
+		<trim prefix="where" prefixOverrides="and">
+			<if test="ID !=null">
+			and db_product.ID=#{ID}
+			</if>
+			<if test="userid !=null">
+			and db_product.userid=#{userid}
+			</if>
+			<if test="goods !=null">
+			and db_product.goods like CONCAT('%',#{goods},'%')
+			</if>
+			<if test="goodsdescription !=null">
+			and db_product.goodsdescription like CONCAT('%',#{goodsdescription},'%')
+			</if>
+			<if test="price !=0.0 and price !=null">
+			and db_product.price=#{price}
+			</if>
+			<if test="priceunit !=null">
+			and db_product.priceunit=#{priceunit}
+			</if>
+			<if test="acondition !=null">
+			and db_product.acondition=#{acondition}
+			</if>
+			<if test="location !=null">
+			and db_product.location=#{location}
+			</if>
+			<if test="shelftime !=null">
+			and db_product.shelftime=#{shelftime}
+			</if>
+			<if test="goodstype !=null">
+			and db_product.goodstype=#{goodstype}
+			</if>
+			<if test="goodspic !=null">
+			and db_product.goodspic=#{goodspic}
+			</if>
+			<if test="state !=null">
+			and db_product.state=#{state}
+			</if>
+		</trim>
+	</select>
+	
+	<!-- 通过商品id集合查询商品信息 -->
+	<select id="selectAllGoodsByGoodsIdList" resultType="com.myee.pojo.Product">
+		select * from db_product where db_product.ID in
+		<foreach collection="list" item="goodsId" open="(" separator="," close=")">
+		#{goodsId}
+		</foreach>
+		order by shelftime ASC
+	</select>
+	
+		<!-- 通过商品描述,页数,每页的大小查询商品(搜索框) -->
+	<select id="selectAllGoodsByInputText" resultType="com.myee.pojo.Product">
+		select * from db_product where goodsdescription like CONCAT('%',#{goodsdescription},'%')
+		 and db_product.state=#{state} order by price DESC limit #{from},#{pagesize}
+	</select>
+	
+    <!-- 通过商品描述获取记录条数,用于分页(搜索框) -->
+	<select id="selectAllGoodsCountsByInputText" resultType="java.lang.Integer">
+		select count(*) from db_product where goodsdescription like CONCAT('%',#{goodsdescription},'%')
+		 and db_product.state=#{state}
+	</select>
+    
+    
+    
+</mapper>

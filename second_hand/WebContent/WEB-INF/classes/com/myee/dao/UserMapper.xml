@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myee.dao.UserMapper">
+<!-- 通过账号和密码查询(登陆验证) -->
+	<select id="selectByUserNameAndPassword" resultType="com.myee.pojo.User" parameterType="com.myee.pojo.User">
+		select * from db_user where username=#{username} and password=#{password}
+	</select>
+	
+	<!-- 通过账号查询(验证注册账户是否已存在) -->
+	<select id="selectByUserName" resultType="com.myee.pojo.User" parameterType="com.myee.pojo.User">
+		select * from db_user where username=#{username}
+	</select>
+	
+	<!-- 插入新用户 -->
+	<insert id="insertNewUser" parameterType="com.myee.pojo.User">
+	insert into db_user(ID,username,password,post,email,phone,registertime,credit,turnover,complaint,address) 
+	values(#{ID},#{username},#{password},#{post},#{email},#{phone},#{registertime},#{credit},#{turnover},#{complaint},#{address})
+	</insert>
+	
+	<!-- 根据session中的usetid查询用户信息 -->
+	<select id="selectByUserId" resultType="com.myee.pojo.User" parameterType="java.lang.String">
+		select * from db_user where ID=#{ID}
+	</select>
+	
+	<!-- 根据userid修改邮箱,手机号,收货地址 -->
+	<update id="updatePartialMessage" parameterType="com.myee.pojo.User">
+	update db_user set email=#{email},phone=#{phone},address=#{address}  where db_user.ID=#{ID}
+	</update>
+	
+	<!-- 根据userid修改密码-->
+	<update id="updatepasswordByID" parameterType="java.lang.String">
+	update db_user set password=#{password}  where db_user.ID=#{ID}
+	</update>
+	
+	<!-- 根据userid修改支付密码-->
+	<update id="updatepaypasswordByID" parameterType="java.lang.String">
+	update db_user set paypassword=#{paypassword}  where db_user.ID=#{ID}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

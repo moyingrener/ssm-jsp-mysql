@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myee.dao.OrderMapper">
+	<!--通过username查询订单中商品id -->
+	<select id="selectOrderGoodsIDByUserName" resultType="java.lang.String" parameterType="java.lang.String">
+		select db_order.productid from db_order where username=#{username}
+	</select>
+
+	<!-- 通过商品id集合查询商品信息,订单信息 -->
+	<select id="selectAllGoodsAndOrderByGoodsIdList" resultType="com.myee.pojo.OrderCustom">
+	select * from db_product,db_order where db_product.ID in
+	<foreach collection="list" item="goodsId" open="(" separator="," close=")">
+	#{goodsId}
+	</foreach>
+	and db_order.productid in
+	<foreach collection="list" item="goodsId" open="(" separator="," close=")">
+	#{goodsId}
+	</foreach>
+	and db_product.ID=db_order.productid order by createtime DESC
+	</select>
+
+	<!-- 通过商品id,用户名,时间,收货地址产生新订单 -->
+	<insert id="insertNewOrder" parameterType="com.myee.pojo.Order">
+	insert into db_order(ID,productid,username,createtime,address) 
+	values(#{ID},#{productid},#{username},#{createtime},#{address})
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>
